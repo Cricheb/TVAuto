@@ -41,7 +41,12 @@ public class Show {
             String epiName = epiJson.getString("name");
             int epiNumber = epiJson.getInt("number");
             int epiSeason = epiJson.getInt("season");
-            Episode e = new Episode(epiName, epiSeason, epiNumber);
+            Episode e = new Episode(name, epiSeason, epiNumber, epiName);
+            if (epiNumber == 1){
+                System.out.println(" ");
+            }
+            System.out.println(e.getEpisode());
+
             //showEpisodes.add(e);
         }
 

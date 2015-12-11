@@ -23,6 +23,12 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
+import javax.xml.bind.Marshaller;
+import java.io.File;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+
 
 /**
  * @author Zebastian Lilja
@@ -35,23 +41,21 @@ public class Application {
         //User input
         String userInputShowName = "HappY Emdings";
 
+        //creates client and sets web target for REST
         Client client = ClientBuilder.newBuilder().newClient();
         WebTarget target = client.target("http://api.tvmaze.com");
 
-        Show show = new Show(userInputShowName, client, target);
+        //Creates new show, send with it the search term the User put in, the client and the webtarget.
+        //So it knows what to look for and where.
+        Show show;
 
-        userInputShowName = "quantico";
-        show = new Show(userInputShowName, client, target);
-
-
-        //System.out.println("Show name: " + name + System.getProperty("line.separator") + "Show ID: " + showId);
-        //System.out.println(builder.get(String.class));
-        //System.out.println(embedded);
-        //System.out.println(userInputShowName);
-        //System.out.println(epiName);
-        //System.out.println(idBuilder.get(String.class));
-        //System.out.println(episodeNumber);
-        //System.out.println(show.getName());
+        //Uses the arraylist the class Show creates prints each episode in that show out to log.
+        ArrayList<Episode> showEpisodes = show.getArray();
+        for (int i = 0 ; i < showEpisodes.size(); i++){
+            if (showEpisodes.get(i).getEpisodeNumber() == 1){
+                System.out.println(" ");
+            }
+            System.out.println(showEpisodes.get(i).getEpisode() );
+        }
     }
-
 }

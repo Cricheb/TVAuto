@@ -38,6 +38,7 @@ public class Application {
 
 
     public static void main(String[] args){
+       try {
         //User input
         String userInputShowName = "HappY Emdings";
 
@@ -47,15 +48,31 @@ public class Application {
 
         //Creates new show, send with it the search term the User put in, the client and the webtarget.
         //So it knows what to look for and where.
-        Show show;
+        Show show = new Show(userInputShowName, client, target);
 
         //Uses the arraylist the class Show creates prints each episode in that show out to log.
         ArrayList<Episode> showEpisodes = show.getArray();
-        for (int i = 0 ; i < showEpisodes.size(); i++){
-            if (showEpisodes.get(i).getEpisodeNumber() == 1){
+        for (int i = 0 ; i < showEpisodes.size(); i++) {
+            if (showEpisodes.get(i).getEpisodeNumber() == 1) {
                 System.out.println(" ");
             }
-            System.out.println(showEpisodes.get(i).getEpisode() );
+            System.out.println(showEpisodes.get(i).getEpisode());
+        }
+
+           Shows shows = new Shows();
+           shows.add(show);
+           File file = new File("C:\\Users\\Zebastian\\Desktop\\Repo\\SaveFiles\\AutoTVSaveFile.xml");
+           JAXBContext jaxbContext = JAXBContext.newInstance(Shows.class);
+           Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+           // output pretty printed
+           jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+
+           jaxbMarshaller.marshal(shows, file);
+           jaxbMarshaller.marshal(shows, System.out);
+
+
+    }catch (JAXBException error) {
+        error.printStackTrace();
         }
     }
 }

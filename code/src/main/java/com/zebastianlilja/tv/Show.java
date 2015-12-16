@@ -25,68 +25,57 @@ public class Show {
     String name ;
     Client client;
     WebTarget target;
-
+    @XmlElement
     ArrayList<Episode> showEpisodes = new ArrayList<Episode>();
 
 
     public Show(String userInputShowName,Client inClient, WebTarget inTarget){
-        name = userInputShowName;
-        client = inClient;
-        target = inTarget;
+            name = userInputShowName;
+            client = inClient;
+            target = inTarget;
 
-        //Searches for the Users input show name in the Webtarget.
-        target = target.path("/singlesearch/shows").queryParam("q", name).queryParam("embed", "episodes");
-        Invocation.Builder builder = target.request();
+            //Searches for the Users input show name in the Webtarget.
+            target = target.path("/singlesearch/shows").queryParam("q", name).queryParam("embed", "episodes");
+            Invocation.Builder builder = target.request();
 
 
-        // Loades the JSONdata from the Webtarget
-        String str = builder.get(String.class);
-        JSONObject obj = new JSONObject(str);
+            // Loades the JSONdata from the Webtarget
+            String str = builder.get(String.class);
+            JSONObject obj = new JSONObject(str);
 
-        //Takes the name of the show from the JSONdata
-        name = obj.getString("name");
+            //Takes the name of the show from the JSONdata
+            name = obj.getString("name");
 
-        //Looks for episodesdata embedded in the JSONdata and make and a JSONArray of found data
-        JSONObject embedded = obj.getJSONObject("_embedded");
-        JSONArray episodes = embedded.getJSONArray("episodes");
+            //Looks for episodesdata embedded in the JSONdata and make and a JSONArray of found data
+            JSONObject embedded = obj.getJSONObject("_embedded");
+            JSONArray episodes = embedded.getJSONArray("episodes");
 
-        //Loops through the JSONArray and loads each episodes data into variables.
-        for (int i = 0 ; i < episodes.length(); i++){
-            JSONObject epiJson = episodes.getJSONObject(i);
-            String epiName = epiJson.getString("name");
-            int epiNumber = epiJson.getInt("number");
-            int epiSeason = epiJson.getInt("season");
 
-            //Creates a new Episode for each post in the JSONArray.
-            Episode e = new Episode();
 
-            //Sets the Episodes information
-            e.setShowName(name);
-            e.setEpisodeName(epiName);
-            e.setEpisodeNumber(epiNumber);
-            e.setSeasonNumber(epiSeason);
-            e.setAquired(false);
-            e.setWatched(false);
 
-            // Adds each episode to a ListArray called showEpisodes, for safekeeping.
-            showEpisodes.add(e);
+            //Loops through the JSONArray and loads each episodes data into variables.
+            for (int i = 0; i < episodes.length(); i++) {
+                JSONObject epiJson = episodes.getJSONObject(i);
+                String epiName = epiJson.getString("name");
+                int epiNumber = epiJson.getInt("number");
+                int epiSeason = epiJson.getInt("season");
 
-            try {
+                //Creates a new Episode for each post in the JSONArray.
+                Episode e = new Episode();
 
-                File file = new File("C:\\Users\\Zebastian\\Desktop\\Repo\\SaveFiles\\AutoTVSaveFile.xml");
-                JAXBContext jaxbContext = JAXBContext.newInstance(Episode.class);
-                Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+                //Sets the Episodes information
+                e.setShowName(name);
+                e.setEpisodeName(epiName);
+                e.setEpisodeNumber(epiNumber);
+                e.setSeasonNumber(epiSeason);
+                e.setAquired(false);
+                e.setWatched(false);
 
-                // output pretty printed
-                jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-
-                jaxbMarshaller.marshal(e, file);
-                jaxbMarshaller.marshal(e, System.out);
-
-            } catch (JAXBException error) {
-                error.printStackTrace();
+                // Adds each episode to a ListArray called showEpisodes, for safekeeping.
+                showEpisodes.add(e);
             }
-        }
+
+
 
 
     }
